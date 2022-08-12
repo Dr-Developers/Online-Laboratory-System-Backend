@@ -1,2 +1,2 @@
-# Online-Laboratory-System
-Online Laboratory System - 3rd Year 1st Semester SPM Project
+# Online-Laboratory-Management-System-Backend
+Online Laboratory Management System Backend - 3rd Year 1st Semester SPM Project
