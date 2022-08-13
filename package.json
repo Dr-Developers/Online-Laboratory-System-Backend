@@ -1,7 +1,7 @@
 {
-    "name": "online-hospital-management-system-backend",
+    "name": "online-laboratory-management-system-backend",
     "version": "1.0.0",
-    "description": "Hospital Management System",
+    "description": "laboratory Management System",
     "main": "app.js",
     "scripts": {
         "start": "nodemon --exec babel-node src/app.js"
@@ -25,6 +25,7 @@
         "dotenv": "^16.0.1",
         "express": "^4.18.1",
         "joi": "^17.6.0",
+        "jsonwebtoken": "^8.5.1",
         "mongoose": "^6.5.1",
         "nodemon": "^2.0.19"
     }
