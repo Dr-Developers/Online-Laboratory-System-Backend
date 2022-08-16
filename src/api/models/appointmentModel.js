@@ -25,9 +25,7 @@ const appointmentSchema = new mongoose.Schema({
         testName: { 
             type: String, 
             required: true },
-
     },
-
     { timestamps: true }
 );
 
