@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 
+const patientRoute = require("./api/routes/patientRoutes");
+
 const app = express();
 app.use(express.json());
 dotenv.config();
@@ -18,3 +20,5 @@ mongoose
 app.listen(process.env.PORT || 5000, () => {
     console.log("Listening on port " + process.env.PORT || 5000, "\b...!");
 });
+
+app.use("/api/patient", patientRoute);
