@@ -13,6 +13,7 @@ const appointmentValidation = (data) => {
     });
 
     return schemaValidation.validate(data);
+    
 };
 
 module.exports.appointmentValidation = appointmentValidation;//export functions
