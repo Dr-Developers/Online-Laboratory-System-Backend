@@ -14,7 +14,7 @@ const RegistrationValidation = (data) => {
         password: Joi.string().required(),
     });
 
-    return schemaValidation.validate(data);
+    return SchemaValidation.validate(data);
 };
 
 module.exports.RegistrationValidation = RegistrationValidation;
