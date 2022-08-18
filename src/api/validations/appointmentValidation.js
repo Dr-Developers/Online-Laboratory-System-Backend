@@ -2,6 +2,8 @@ const Joi = require("joi");
 
 const appointmentValidation = (data) => {
     const schemaValidation = Joi.object({
+        date: Joi.string().required(),
+        time: Joi.string().required(),
         firstName: Joi.string().required(),
         lastName: Joi.string().required(),
         nic: Joi.string().required(),
