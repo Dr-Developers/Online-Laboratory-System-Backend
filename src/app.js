@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 
 const patientRoute = require("./api/routes/patientRoutes");
 const appointmentRoute = require("./api/routes/appointmentRoutes");
+const reportRoute = require("./api/routes/reportRoutes");
 
 const app = express();
 app.use(express.json());
@@ -24,3 +25,4 @@ app.listen(process.env.PORT || 5000, () => {
 
 app.use("/api/patient", patientRoute);
 app.use("/api/appointment", appointmentRoute);
+app.use("/api/report", reportRoute);
