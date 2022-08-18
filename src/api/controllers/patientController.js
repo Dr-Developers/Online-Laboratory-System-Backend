@@ -1,28 +1,31 @@
 const CryptoJS = require("crypto-js");
 
 const patient = require("../models/patientModel");
-const { RegistrationValidation } = require("../validations/patientValidation");
+const {
+    RegistrationValidation,
+} = require("../validations/patientValidation");
 
 const registerPatient = async(req, res) => {
     // validating user input fields
     const { err } = RegistrationValidation(req.body);
-    if (err) {
+    if(err) {
         res.send({ message: err["details"][0]["message"] });
     }
 
-    // checking the data in the console
-    console.log(req.body);
-
     // checking whther the user has already registered
-    const emailExist = await patient.findOne({
+    const emailExists = await patient.findOne({
         email: req.body.email,
     });
 
-    const usernameExist = await patient.findOne({
+    const usernameExists = await patient.findOne({
         username: req.body.username,
     });
 
-    if (emailExist || usernameExist) {
+    const nicExists = await patient.findOne({
+        nic: req.body.nic,
+    });
+
+    if(emailExists || nicExists || usernameExists) {
         return res.status(400).json("User already exists");
     }
 
@@ -39,18 +42,17 @@ const registerPatient = async(req, res) => {
         username: req.body.username,
         password: CryptoJS.AES.encrypt(
             req.body.password,
-            process.env.PASS_SECRET
+            process.env.PASS_SECRET,
         ).toString(),
     });
 
-    // checking the data in the console
-    console.log(newPatient);
-
     try {
+        // checking the data in the console
+        console.log(newPatient);
         console.log("Patient Saved Successfully");
         const savedPatient = newPatient.save();
         res.send(savedPatient);
-    } catch (err) {
+    } catch(err) {
         res.status(400).json("Error");
     }
 };
