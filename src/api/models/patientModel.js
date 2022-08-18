@@ -14,7 +14,7 @@ const patientSchema = new mongoose.Schema({
         isPatient: { type: Boolean, default: true },
     },
 
-    { timestamps: true }
+    { timestamps: true },
 );
 
 module.exports = mongoose.model("Patient", patientSchema);
