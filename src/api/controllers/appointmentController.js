@@ -23,6 +23,8 @@ const addAppointment = async (req, res) => {
 
     //assign data to the model
     const appointment = new Appointment({
+        date: req.body.date,
+        time: req.body.date,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         nic: req.body.nic,
