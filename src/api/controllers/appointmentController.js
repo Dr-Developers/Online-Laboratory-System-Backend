@@ -1,5 +1,3 @@
-const CryptoJS = require("crypto-js");
-
 const Appointment = require("../models/appointmentModel");
 const { appointmentValidation } = require("../validations/appointmentValidation");
 
