@@ -16,8 +16,8 @@ const addAppointment = async(req, res) => {
 
     //to check appointment already exist
     const appointmentExist = await Appointment.findOne({
-    date: req.body.date,
-    nic: req.body.nic,
+        nic: req.body.nic,
+        date: req.body.date,
     });
 
     if(appointmentExist) {
