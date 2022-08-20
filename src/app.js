@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const patientRoute = require("./api/routes/patientRoutes");
 const appointmentRoute = require("./api/routes/appointmentRoutes");
 const reportRoute = require("./api/routes/reportRoutes");
+const authRoute = require("./api/routes/authRoutes");
 
 const app = express();
 app.use(express.json());
@@ -13,7 +14,9 @@ dotenv.config();
 // Creating the connection with the database
 mongoose
     .connect(process.env.MONGODB_URL)
-    .then(() => console.log("Successfully Connected to the MongoDB Database...!"))
+    .then(() =>
+        console.log("Successfully Connected to the MongoDB Database...!"),
+    )
     .catch((err) => {
         console.log(err);
     });
@@ -26,3 +29,4 @@ app.listen(process.env.PORT || 5000, () => {
 app.use("/api/patient", patientRoute);
 app.use("/api/appointment", appointmentRoute);
 app.use("/api/report", reportRoute);
+app.use("/api/login", authRoute);
