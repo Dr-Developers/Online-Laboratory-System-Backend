@@ -3,12 +3,19 @@ const JWT = require("jsonwebtoken");
 
 const patient = require("../models/patientModel");
 const labAss = require("../models/labAssiModel");
+const { LoginValidation } = require("../validations/loginValidation");
 const LocalStorage = require("node-localstorage").LocalStorage;
 
 var localStorage = new LocalStorage("./scratch");
 
 const login = async(req, res) => {
     try {
+        //validate the inventory input fields
+        const { error } = LoginValidation(req.body);
+        if(error) {
+            res.send({ message: error["details"][0]["message"] });
+        }
+
         // taking data from the database for relavent username
         const patientData = await patient.findOne({
             username: req.body.username,
