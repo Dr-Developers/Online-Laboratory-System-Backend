@@ -5,11 +5,10 @@ const inventorySchema = new mongoose.Schema({
         itemName: { type: String, required: true },
         supplierName: { type: String, required: true },
         supplierMobile: { type: String, required: true },
-        unitPrice: { type: String, required: true, unique: true },
+        unitPrice: { type: String, required: true },
         quantity: { type: String, required: true },
         totalPrice: { type: String, required: true },
-        purchaseDate: { type: Date, required: true },
-        isInventory : { type: Boolean, default: true },
+        purchaseDate: { type: String, required: true },
     },
 
     { timestamps: true }
