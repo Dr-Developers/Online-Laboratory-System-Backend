@@ -7,6 +7,7 @@ const appointmentRoute = require("./api/routes/appointmentRoutes");
 const reportRoute = require("./api/routes/reportRoutes");
 const inventoryRoute = require("./api/routes/inventoryRoutes");
 const authRoute = require("./api/routes/authRoutes");
+const labAssRoute = require("./api/routes/labAssRoutes");
 
 const app = express();
 app.use(express.json());
@@ -32,4 +33,4 @@ app.use("/api/appointment", appointmentRoute);
 app.use("/api/report", reportRoute);
 app.use("/api/inventory", inventoryRoute);
 app.use("/api/login", authRoute);
-
+app.use("/api/labAssi", labAssRoute);
