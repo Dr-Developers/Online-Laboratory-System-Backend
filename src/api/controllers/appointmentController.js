@@ -51,6 +51,90 @@ const addAppointment = async(req, res) => {
     }
 };
 
+
+//get all function
+const getAppointments= async (req, res) => {
+	try {
+		// taking all the Appointments data
+		const allAppointments = await Appointment.find();
+		res.send(allAppointments); // sending the taken data
+	} catch (err) {
+		res.status(400).json(err.message); // error handling
+	}
+};
+
+
+const getOneAppointment = async (req, res) => {
+	try {
+		// taking the relavent Appointment
+		const takenAppointment = await Appointment.findOne({ _id: req.params.id });
+
+		// checking whether is there that Appointment in the DB
+		if (!takenAppointment) {
+			res.status(404).json("Appointment not found !"); // if not found Appointment
+		} else {
+			res.status(200).json(takenAppointment); // if found sending display Appointment
+		}
+	} catch (err) {
+		res.status(400).json(err.message); // error handling
+	}
+};
+
+
+const updateAppointment = async (req, res) => {
+
+	try {
+		// setting the updated details of the specific Appointment and update database
+		const updateAppointment = await Appointment.findByIdAndUpdate(
+			req.params.id,
+			{ $set: req.body },
+			{ new: true },
+		);
+
+		// checking whether is there any updated Appointment
+		if (!updateAppointment) {
+			res.status(500).json("Appointment Not Found !");
+			console.log("Appointment Not Found !");
+		} else {
+			// sending the updated Appointment when it is successfull
+			res.status(200).json(updateAppointment);
+			console.log("Appointment Updated Successfully !");
+		}
+	} catch (err) {
+		// if there is any error in updating this will catch it and send
+		res.status(400).json(err);
+		console.log("Appointment Update Error !");
+	}
+};
+
+
+const deleteAppointment = async (req, res) => {
+	const appointmentID = req.params.id;
+	try {
+		// taking Appointment's id to a variable
+		const appointment = await Appointment.findById(appointmentID);
+
+		// checking whether is there that Appointment in the DB
+		if (!appointment) {
+			res.status(404).json("Appointment not found !"); // if not found Appointment
+		} else {
+			const deleteAppointment = await Appointment.findByIdAndDelete(
+				appointmentID,
+			); // if found delete Appointment
+			res.status(200).json(deleteAppointment);
+			console.log("Appointment Deleted Successfully !");
+		}
+	} catch (err) {
+		res.status(400).json(err.message); // error handling
+	}
+};
+
+
+
 module.exports = {
     addAppointment,
+    getAppointments,
+    getOneAppointment,
+    updateAppointment,
+    deleteAppointment,
 }; //export functions
