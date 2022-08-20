@@ -6,7 +6,7 @@ const reportValidation = (data) => {
         lastName: Joi.string().required(),
         gender: Joi.string().required(),
         date: Joi.string().required(),
-        age: Joi.string().required(),
+        age: Joi.number().required(),
         nic: Joi.string().required(),
         phoneNumber: Joi.string().required(),
         testName: Joi.string().required(),
@@ -16,7 +16,6 @@ const reportValidation = (data) => {
     });
 
     return schemaValidation.validate(data);
-    
 };
 
-module.exports.reportValidation = reportValidation;//export functions
+module.exports.reportValidation = reportValidation; //export functions
