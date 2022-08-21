@@ -9,11 +9,16 @@ const {
     
 } = require("../controllers/reportController");
 
+const {
+    verifyTokenAuthorization,
+    verifyTokenAndLabAss,
+} = require("../verifyToken/verifyToken");
+
 //define user routes
-router.post("/add", addReport);
-router.get("/", getreports);
-router.get("/:id", getOneReport);
-router.delete("/delete/:id", deleteReport);
-router.put("/update/:id", updateReport);
+router.post("/add", verifyTokenAndLabAss, addReport);
+router.get("/", verifyTokenAndLabAss, getreports);
+router.get("/:id", verifyTokenAuthorization, getOneReport);
+router.delete("/delete/:id", verifyTokenAndLabAss, deleteReport);
+router.put("/update/:id", verifyTokenAndLabAss, updateReport);
 
 module.exports = router;
