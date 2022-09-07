@@ -26,7 +26,6 @@ const login = async(req, res) => {
 
         if(patientData) {
             // code fot testing purposes
-            console.log(patientData);
 
             localStorage.setItem("isPatient", patientData.isPatient);
 
@@ -40,7 +39,9 @@ const login = async(req, res) => {
                 // checking whether the password we entered is correct or not
                 if(decryptedPassword !== req.body.password) {
                     res.status(401).json("Wrong Password !");
+                    console.log("Wrong Password!");
                 } else {
+                    console.log(patientData);
                     // generating the web token to the specified user
                     const accessToken = JWT.sign({
                             _id: patientData.id,
