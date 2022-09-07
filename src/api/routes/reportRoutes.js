@@ -2,11 +2,9 @@ const router = require("express").Router();
 const {
     addReport,
     getreports,
-	getOneReport,
-	deleteReport,
-	updateReport,
-
-    
+    getOneReport,
+    deleteReport,
+    updateReport,
 } = require("../controllers/reportController");
 
 const {
