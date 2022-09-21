@@ -4,15 +4,13 @@ const reportValidation = (data) => {
     const schemaValidation = Joi.object({
         firstName: Joi.string().required(),
         lastName: Joi.string().required(),
-        gender: Joi.string().required(),
+        Gender: Joi.string().required(),
         date: Joi.string().required(),
         age: Joi.number().required(),
         nic: Joi.string().required(),
         phoneNumber: Joi.string().required(),
         testName: Joi.string().required(),
-        test: Joi.string().required(),
-        result: Joi.string().required(),
-        normalValues: Joi.string().required(),
+        
     });
 
     return schemaValidation.validate(data);
