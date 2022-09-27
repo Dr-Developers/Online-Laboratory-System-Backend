@@ -3,6 +3,7 @@ const {
     addAppointment,
     getAppointments,
     getOneAppointment,
+    getDateAndTime,
 	updateAppointment,
     deleteAppointment,
 } = require("../controllers/appointmentController");
@@ -17,6 +18,7 @@ const {
 router.post("/add", verifyTokenAuthorization, addAppointment);
 router.get("/", verifyTokenAndLabAss, getAppointments);
 router.get("/:id", verifyTokenAuthorization, getOneAppointment);
+router.get("/check", verifyTokenAuthorization, getDateAndTime);
 router.put("/update/:id", verifyTokenAuthorization, updateAppointment);
 router.delete("/delete/:id", verifyTokenAuthorization, deleteAppointment);
 
