@@ -13,7 +13,7 @@ const {
 } = require("../verifyToken/verifyToken");
 
 //define user routes
-router.post("/add", verifyTokenAndLabAss, addReport);
+router.post("/add",verifyTokenAndLabAss, addReport);
 router.get("/", verifyTokenAndLabAss, getreports);
 router.get("/:id", verifyTokenAuthorization, getOneReport);
 router.delete("/delete/:id", verifyTokenAndLabAss, deleteReport);

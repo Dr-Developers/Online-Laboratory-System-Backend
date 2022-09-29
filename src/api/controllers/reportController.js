@@ -4,19 +4,20 @@ const { reportValidation } = require("../validations/reportValidation");
 //add report function
 const addReport = async(req, res) => {
     //validate the report input fields
-    const { error } = reportValidation(req.body);
-    if(error) {
-        res.send({ message: error["details"][0]["message"] });
-    }
-
-    // checking the data in the console
-    // console.log(req.body);
+console.log("dd");
+    // const { error } = reportValidation(req.body.data);
+    // if(error) {
+    //     return res.send({ message: error["details"][0]["message"] });
+    // }
+console.log("ee");
+   // checking the data in the console
+    console.log(req.body);
 
     //to check report already exist
     const reportExist = await Report.findOne({
-        nic: req.body.nic,
-        date: req.body.date,
-        testName: req.body.testName,
+        nic: req.body.data.nic,
+        date: req.body.data.date,
+        testName: req.body.data.testName,
     });
 
     if(reportExist) {
@@ -24,30 +25,30 @@ const addReport = async(req, res) => {
         return res.status(400).send({ message: "Report already exist" });
     }
 
+	try {
+		console.log("ok");
     //assign data to the model
-    const report = new Report({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        gender: req.body.gender,
-        date: req.body.date,
-        age: req.body.age,
-        nic: req.body.nic,
-        phoneNumber: req.body.phoneNumber,
-        testName: req.body.testName,
-        test: req.body.test,
-        result: req.body.result,
-        normalValues: req.body.normalValues,
-    });
+    const report = await new Report({
+        firstName: req.body.data.firstName,
+        lastName: req.body.data.lastName,
+        Gender: req.body.data.Gender,
+        date: req.body.data.date,
+        age: req.body.data.age,
+        nic: req.body.data.nic,
+        phoneNumber: req.body.data.phoneNumber,
+        testName: req.body.data.testName,
+        testData: req.body.data.testData,
+    }).save()
 
-    try {
+    console.log("ss",report);
         //save the data in the database
-        console.log("Report Saved Successfully");
-        const savedReport = await report.save();
-        res.send(savedReport);
-        console.log(savedReport);
+        //console.log("Report Saved Successfully");
+        //const savedReport = await report.save();
+        return res.status(200).json(report);
+        console.log("Report Saved Successfully",savedReport);
     } catch(error) {
         //error handling
-        res.status(400).send({ message: error });
+        return res.status(400).send({ message: error });
     }
 };
 
