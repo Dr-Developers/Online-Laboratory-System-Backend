@@ -8,52 +8,56 @@ const {
 const registerPatient = async(req, res) => {
     // validating user input fields
     const { err } = RegistrationValidation(req.body);
-    if(err) {
-        res.send({ message: err["details"][0]["message"] });
-    }
-
-    // checking whether the user has already registered
-    const emailExists = await patient.findOne({
-        email: req.body.email,
-    });
-
-    const usernameExists = await patient.findOne({
-        username: req.body.username,
-    });
-
-    const nicExists = await patient.findOne({
-        nic: req.body.nic,
-    });
-
-    if(emailExists || nicExists || usernameExists) {
-        return res.status(400).json("User already exists !");
-    }
-
-    // creating a new patient object
-    const newPatient = new patient({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        phoneNumber: req.body.phoneNumber,
-        nic: req.body.nic,
-        address: req.body.address,
-        dateOfBirth: req.body.dateOfBirth,
-        gender: req.body.gender,
-        username: req.body.username,
-        password: CryptoJS.AES.encrypt(
-            req.body.password,
-            process.env.PASS_SECRET, // encrypting the password
-        ).toString(),
-    });
-
     try {
-        // checking the data in the console
-        const savedPatient = newPatient.save(); // saving data
-        res.status(200).json(savedPatient);
-        console.log(newPatient);
-        console.log("Patient Saved Successfully !");
+        if(err) {
+            res.send({ message: err["details"][0]["message"] });
+        }
+
+        // checking whether the user has already registered
+        const emailExists = await patient.findOne({
+            email: req.body.email,
+        });
+
+        const usernameExists = await patient.findOne({
+            username: req.body.username,
+        });
+
+        const nicExists = await patient.findOne({
+            nic: req.body.nic,
+        });
+
+        if(emailExists || nicExists || usernameExists) {
+            return res.status(400).json("User already exists !");
+        }
+
+        // creating a new patient object
+        const newPatient = new patient({
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            email: req.body.email,
+            phoneNumber: req.body.phoneNumber,
+            nic: req.body.nic,
+            address: req.body.address,
+            dateOfBirth: req.body.dateOfBirth,
+            gender: req.body.gender,
+            username: req.body.username,
+            password: CryptoJS.AES.encrypt(
+                req.body.password,
+                process.env.PASS_SECRET, // encrypting the password
+            ).toString(),
+        });
+
+        try {
+            // checking the data in the console
+            const savedPatient = newPatient.save(); // saving data
+            res.status(200).json(savedPatient);
+            console.log(newPatient);
+            console.log("Patient Saved Successfully !");
+        } catch(err) {
+            res.status(400).json("Error"); // error handling
+        }
     } catch(err) {
-        res.status(400).json("Error"); // error handling
+        console.log(err);
     }
 };
 
