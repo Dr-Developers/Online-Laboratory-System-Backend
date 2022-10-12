@@ -1,49 +1,53 @@
 const Inventory = require("../models/inventoryModel");
 const {
-    InventoryValidation,
+	InventoryValidation,
 } = require("../validations/inventoryValidation");
 
 //add inventory function
-const addInventory = async(req, res) => {
-    //validate the inventory input fields
-    const { error } = InventoryValidation(req.body);
-    if(error) {
-        res.send({ message: error["details"][0]["message"] });
-    }
+const addInventory = async (req, res) => {
+	//validate the inventory input fields
+	try {
+		const { error } = InventoryValidation(req.body);
+		if (error) {
+			return res.send({ message: error["details"][0]["message"] });
+		}
 
-    // checking the data in the console
-    console.log(req.body);
+		// checking the data in the console
+		console.log(req.body);
 
-    //to check inventory already exist
-    const inventoryExist = await Inventory.findOne({
-        itemID: req.body.itemID,
-        itemName: req.body.itemName,
-    });
+		//to check inventory already exist
+		const inventoryExist = await Inventory.findOne({
+			itemID: req.body.itemID,
+			itemName: req.body.itemName,
+		});
 
-    if(inventoryExist) {
-        return res.status(400).json("Inventory already exists !");
-    }
+		if (inventoryExist) {
+			return res.status(400).json("Inventory already exists !");
+		}
 
-    //assign inventory details to the model
-    const inventory = new Inventory({
-        itemID: req.body.itemID,     
-        itemName: req.body.itemName,
-        supplierName: req.body.supplierName,
-        supplierMobile: req.body.supplierMobile,
-        unitPrice: req.body.unitPrice,
-        quantity: req.body.quantity,
-        totalPrice: req.body.totalPrice,
-        purchaseDate: req.body.purchaseDate,
-    });
+		//assign inventory details to the model
+		const inventory = new Inventory({
+			itemID: req.body.itemID,
+			itemName: req.body.itemName,
+			supplierName: req.body.supplierName,
+			supplierMobile: req.body.supplierMobile,
+			unitPrice: req.body.unitPrice,
+			quantity: req.body.quantity,
+			totalPrice: req.body.totalPrice,
+			purchaseDate: req.body.purchaseDate,
+		});
 
-    try {
-        //save the data in the database
-        console.log("Invenory Details Saved Successfully");
-        const savedInventory = await inventory.save();
-        res.send(savedInventory);
-    } catch(err) {
-        res.status(400).send({ message: error });//error handling
-    }
+		try {
+			//save the data in the database
+			console.log("Invenory Details Saved Successfully");
+			const savedInventory = await inventory.save();
+			return res.send(savedInventory);
+		} catch (err) {
+			return res.status(400).send({ message: error }); //error handling
+		}
+	} catch (err) {
+		return res.status(400).json(err.message);
+	}
 };
 
 //get all function
@@ -60,7 +64,9 @@ const getInventory = async (req, res) => {
 const getOneInventory = async (req, res) => {
 	try {
 		// taking the relavent inventory
-		const takenInventory = await Inventory.findOne({ _id: req.params.id });
+		const takenInventory = await Inventory.findOne({
+			_id: req.params.id,
+		});
 
 		// checking whether is there that inventory in the DB
 		if (!takenInventory) {
@@ -74,7 +80,6 @@ const getOneInventory = async (req, res) => {
 };
 
 const updateInventory = async (req, res) => {
-
 	try {
 		// setting the updated details of the specific inventory and update database
 		const updateInventory = await Inventory.findByIdAndUpdate(
@@ -99,7 +104,6 @@ const updateInventory = async (req, res) => {
 	}
 };
 
-
 const deleteInventory = async (req, res) => {
 	const itemID = req.params.id;
 	try {
@@ -123,9 +127,9 @@ const deleteInventory = async (req, res) => {
 };
 
 module.exports = {
-    addInventory,
-    getInventory,
-    getOneInventory,
-    updateInventory,
-    deleteInventory,
+	addInventory,
+	getInventory,
+	getOneInventory,
+	updateInventory,
+	deleteInventory,
 }; //export functions
