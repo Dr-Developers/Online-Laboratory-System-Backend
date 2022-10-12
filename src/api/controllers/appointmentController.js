@@ -1,79 +1,115 @@
 const Appointment = require("../models/appointmentModel");
+const momentUTCTimeFormatter = require("moment");
 const {
-    appointmentValidation,
+	appointmentValidation,
 } = require("../validations/appointmentValidation");
 
 //add appointment function
-const addAppointment = async(req, res) => {
-    //validate the appointment input fields
-    const { error } = appointmentValidation(req.body.data);
-    if(error) {
-        res.send({ message: error["details"][0]["message"] });
-    }
+const addAppointment = async (req, res) => {
+	//validate the appointment input fields
+	const { error } = appointmentValidation(req.body.data);
+	if (error) {
+		res.send({ message: error["details"][0]["message"] });
+	}
 
-    // checking the data in the console
-    console.log(req.body.data);
+	// checking the data in the console
+	console.log(req.body.data);
 
-    //to check appointment already exist
-    const appointmentExist = await Appointment.findOne({
-        nic: req.body.data.nic,
-        date: req.body.data.date,
-    });
+	//to check appointment already exist
+	const appointmentExist = await Appointment.findOne({
+		nic: req.body.data.nic,
+		date: req.body.data.date,
+	});
 
-    if(appointmentExist) {
-        return res
-            .status(400)
-            .send({ message: "Appointment already exist" });
-    }
+	if (appointmentExist) {
+		return res
+			.status(400)
+			.send({ message: "Appointment already exist" });
+	}
 
-    //assign data to the model
-    const appointment = new Appointment({
-        date: req.body.data.date,
-        time: req.body.data.time,
-        firstName: req.body.data.firstName,
-        lastName: req.body.data.lastName,
-        nic: req.body.data.nic,
-        phoneNumber: req.body.data.phoneNumber,
-        email: req.body.data.email,
-        gender: req.body.data.gender,
-        age: req.body.data.age,
-        testName: req.body.data.testName,
-    });
+	const appointmentDate = momentUTCTimeFormatter(
+		req.body.data.date,
+	).format("MM/DD/YYYY");
 
-    try {
-        //save the data in the database
-        
-        const savedAppointment = await appointment.save();
-		console.log("Appointment Saved Successfully");
-        // res.send(savedAppointment);
-		res.status(200).json(savedAppointment);
-    } catch(error) {
-        //error handling
-        res.status(400).send({ message: error });
-    }
-};
+	const appointmentTime = momentUTCTimeFormatter(
+		req.body.data.time,
+	).format("hh:mm A");
 
+	//assign data to the model
+	const appointment = new Appointment({
+		date: appointmentDate,
+		time: appointmentTime,
+		firstName: req.body.data.firstName,
+		lastName: req.body.data.lastName,
+		nic: req.body.data.nic,
+		phoneNumber: req.body.data.phoneNumber,
+		email: req.body.data.email,
+		gender: req.body.data.gender,
+		age: req.body.data.age,
+		testName: req.body.data.testName,
+	});
 
-//get all function
-const getAppointments= async (req, res) => {
 	try {
-		// taking all the Appointments data
-		const allAppointments = await Appointment.find();
-		res.send(allAppointments); // sending the taken data
-	} catch (err) {
-		res.status(400).json(err.message); // error handling
+		//save the data in the database
+
+		const savedAppointment = await appointment.save();
+		console.log("Appointment Saved Successfully");
+		res.status(200).json(savedAppointment);
+	} catch (error) {
+		//error handling
+		res.status(400).send({ message: error });
+		console.log(error);
 	}
 };
 
+const getAppointmentsByFilter = async (request, response) => {
+	try {
+		let { searchFilter } = request.body;
+
+		let appointmentViewModel = [];
+
+		if (searchFilter) {
+			appointmentViewModel = await Appointment.find({
+				firstName: { $regex: searchFilter, $options: "i" },
+			});
+		} else {
+			appointmentViewModel = await Appointment.find();
+		}
+
+		let basicAppointmentViewModel = [];
+
+		for (const item of appointmentViewModel) {
+			basicAppointmentViewModel.push({
+				_id: item._id,
+				firstName: item.firstName,
+				lastName: item.lastName,
+				nic: item.nic,
+				phoneNumber: item.phoneNumber,
+				email: item.email,
+				testName: item.testName,
+				status: item.status,
+				date: momentUTCTimeFormatter(new Date(item.date)).format(
+					"MMMM Do YYYY",
+				),
+				time: item.time,
+			});
+		}
+
+		response.json(basicAppointmentViewModel);
+	} catch (error) {}
+};
 
 const getOneAppointment = async (req, res) => {
 	try {
 		// taking the relavent Appointment
-		const takenAppointment = await Appointment.findOne({ _id: req.params.id });
+		const nic = req.body.nic;
+		console.log(nic);
+		const takenAppointment = await Appointment.findOne({ nic: nic });
+		console.log(takenAppointment);
 
 		// checking whether is there that Appointment in the DB
 		if (!takenAppointment) {
-			res.status(404).json("Appointment not found !"); // if not found Appointment
+			res.status(400).json("Appointment not found !"); // if not found Appointment
 		} else {
 			res.status(200).json(takenAppointment); // if found sending display Appointment
 		}
@@ -82,27 +118,37 @@ const getOneAppointment = async (req, res) => {
 	}
 };
 
-const getDateAndTime = async (req, res) => {
+const getDateAndTime = async (request, response) => {
 	try {
-		// taking the relavent Appointment
-		// let userDate = req.params.date;
-		// let userTime = req.params.time;
-		const data = await Appointment.find({date:req.body.date}, {time:req.body.time});
-		console.log(data)
-		// checking whether is there that Appointment in the DB
-		if (!data) {
-			res.status(200).json(true); // if not found Appointment
+		const appointmentDate = momentUTCTimeFormatter(
+			request.body.data.date,
+		).format("MM/DD/YYYY");
+
+		const appointmentTime = momentUTCTimeFormatter(
+			request.body.data.time,
+		).format("hh:mm A");
+
+		const data = await Appointment.find(
+			{ date: appointmentDate } && { time: appointmentTime },
+		);
+
+		if (data.length === 0) {
+			response.json({
+				isExsists: false,
+				message: "Time Slot is Available!",
+			});
 		} else {
-			res.status(200).json(false); // if found sending display Appointment
+			response.json({
+				isExsists: true,
+				message: "Time Slot is not Available!",
+			});
 		}
 	} catch (err) {
-		res.status(400).json(err.message); // error handling
+		response.status(400).json(err.message); // error handling
 	}
 };
 
-
 const updateAppointment = async (req, res) => {
-
 	try {
 		// setting the updated details of the specific Appointment and update database
 		const updateAppointment = await Appointment.findByIdAndUpdate(
@@ -127,7 +173,6 @@ const updateAppointment = async (req, res) => {
 	}
 };
 
-
 const deleteAppointment = async (req, res) => {
 	const appointmentID = req.params.id;
 	try {
@@ -149,13 +194,40 @@ const deleteAppointment = async (req, res) => {
 	}
 };
 
+const statusChange = async (request, response) => {
+	try {
+		const { status, id } = request.body;
+		const appointment = await Appointment.findById(id);
+		if (!appointment) {
+			response.json({
+				isSuceess: false,
+				message: "Appointment Not Found",
+			});
+		}
+		const appointmentObj = await Appointment.findByIdAndUpdate(id, {
+			$set: {
+				status: status,
+			},
+		});
 
+		response.json({
+			isSuceess: true,
+			message: "Appointment Status Changed",
+		});
+	} catch (error) {
+		response.json({
+			isSuceess: false,
+			message: "Error has been occured please try again.",
+		});
+	}
+};
 
 module.exports = {
-    addAppointment,
-    getAppointments,
-    getOneAppointment,
+	addAppointment,
+	getOneAppointment,
 	getDateAndTime,
-    updateAppointment,
-    deleteAppointment,
+	updateAppointment,
+	deleteAppointment,
+	getAppointmentsByFilter,
+	statusChange,
 }; //export functions

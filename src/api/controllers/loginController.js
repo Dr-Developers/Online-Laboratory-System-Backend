@@ -28,6 +28,9 @@ const login = async(req, res) => {
             // code fot testing purposes
 
             localStorage.setItem("isPatient", patientData.isPatient);
+            console.log("===================");
+            console.log("Logged as a Patient");
+            console.log("===================");
 
             // decypting the patient password
             const decryptedPassword = CryptoJS.AES.decrypt(
@@ -42,6 +45,7 @@ const login = async(req, res) => {
                     console.log("Wrong Password!");
                 } else {
                     console.log(patientData);
+                    console.log("Login Successfull !");
                     // generating the web token to the specified user
                     const accessToken = JWT.sign({
                             _id: patientData.id,
@@ -62,10 +66,10 @@ const login = async(req, res) => {
                 res.status(400).json(err.message); // error handling
             }
         } else if(labAssData) {
-            // code fot testing purposes
-            console.log(labAssData);
-
             localStorage.setItem("isLabAss", labAssData.isLabAss);
+            console.log("=========================");
+            console.log("Logged as a Lab Assistant");
+            console.log("=========================");
 
             // decypting the patient password
             const decryptedPassword = CryptoJS.AES.decrypt(
@@ -78,6 +82,10 @@ const login = async(req, res) => {
                 if(decryptedPassword !== req.body.password) {
                     return res.status(401).json("Wrong Password !");
                 } else {
+                    // Testing Purpose
+                    console.log(labAssData);
+                    console.log("Login Successfull !");
+
                     // generating the web token to the specified user
                     const accessToken = JWT.sign({
                             _id: labAssData.id,
@@ -115,6 +123,7 @@ const logout = async(req, res) => {
             (accessToken) => accessToken !== TokenRefresh,
         );
         res.status(200).json("You are logged out successfully");
+        console.log("You are logged out successfully !");
     } catch(err) {
         return res.status(400).send({ message: err });
     }
