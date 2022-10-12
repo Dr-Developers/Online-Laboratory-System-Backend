@@ -149,12 +149,14 @@ const getDateAndTime = async (request, response) => {
 };
 
 const updateAppointment = async (req, res) => {
+
 	try {
-		// setting the updated details of the specific Appointment and update database
+		const data=req.body.data
+		//setting the updated details of the specific Appointment and update database
 		const updateAppointment = await Appointment.findByIdAndUpdate(
 			req.params.id,
-			{ $set: req.body },
-			{ new: true },
+			data
+			
 		);
 
 		// checking whether is there any updated Appointment
