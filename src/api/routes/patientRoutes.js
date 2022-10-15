@@ -6,6 +6,7 @@ const {
     getOnePatient,
     deletePatient,
     updatePatient,
+    getPatientsByFilter,
 } = require("../controllers/patientController");
 const {
     verifyTokenAuthorization,
@@ -18,5 +19,6 @@ router.get("/", verifyTokenAndLabAss, getPatients);
 router.get("/:id", getOnePatient);
 router.delete("/delete/:id", verifyTokenAndLabAss, deletePatient);
 router.put("/update/:id", updatePatient);
+router.post("/filter", getPatientsByFilter);
 
 module.exports = router;
