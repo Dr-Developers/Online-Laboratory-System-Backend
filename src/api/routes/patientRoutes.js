@@ -15,8 +15,8 @@ const {
 // defining routes
 router.post("/register", registerPatient);
 router.get("/", verifyTokenAndLabAss, getPatients);
-router.get("/:id", verifyTokenAuthorization, getOnePatient);
+router.get("/:id", getOnePatient);
 router.delete("/delete/:id", verifyTokenAndLabAss, deletePatient);
-router.put("/update/:id", verifyTokenAuthorization, updatePatient);
+router.put("/update/:id", updatePatient);
 
 module.exports = router;
