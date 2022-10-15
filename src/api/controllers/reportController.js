@@ -117,7 +117,7 @@ const deleteReport = async (req, res) => {
 const updateReport = async (req, res) => {
 	try {
 		const id = req.params.id;
-		 console.log("update ekata awa",req.body)
+		 console.log("update",req.body)
 		
 		// setting the updated details of the specific user and update database
 		const updatedReport = await Report.findByIdAndUpdate(
