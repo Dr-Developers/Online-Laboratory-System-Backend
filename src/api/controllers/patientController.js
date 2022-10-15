@@ -4,6 +4,7 @@ const patient = require("../models/patientModel");
 const {
     RegistrationValidation,
 } = require("../validations/patientValidation");
+const momentUTCTimeFormatter = require("moment");
 
 const registerPatient = async(req, res) => {
     // validating user input fields
@@ -30,6 +31,10 @@ const registerPatient = async(req, res) => {
             return res.status(400).json("User already exists !");
         }
 
+        const dob = momentUTCTimeFormatter(req.body.dateOfBirth).format(
+            "MM/DD/YYYY",
+        );
+
         // creating a new patient object
         const newPatient = new patient({
             firstName: req.body.firstName,
@@ -38,7 +43,7 @@ const registerPatient = async(req, res) => {
             phoneNumber: req.body.phoneNumber,
             nic: req.body.nic,
             address: req.body.address,
-            dateOfBirth: req.body.dateOfBirth,
+            dateOfBirth: dob,
             gender: req.body.gender,
             username: req.body.username,
             password: CryptoJS.AES.encrypt(
