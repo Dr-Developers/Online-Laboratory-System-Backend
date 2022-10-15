@@ -61,6 +61,21 @@ const getInventory = async (req, res) => {
 	}
 };
 
+const getInventoryByFilter = async (request, response) => {
+	try {
+		let { searchFilter } = request.body;
+		let inventoryViewModel = [];
+		if (searchFilter) {
+			inventoryViewModel = await Inventory.find({
+				itemID: { $regex: searchFilter, $options: "i" },
+			});
+		} else {
+			inventoryViewModel = await Inventory.find();
+		}
+		response.json(inventoryViewModel);
+	} catch (error) {}
+}; //1
+
 const getOneInventory = async (req, res) => {
 	try {
 		// taking the relavent inventory
@@ -132,4 +147,5 @@ module.exports = {
 	getOneInventory,
 	updateInventory,
 	deleteInventory,
+	getInventoryByFilter,
 }; //export functions
