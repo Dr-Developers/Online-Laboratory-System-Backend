@@ -145,10 +145,29 @@ const updatePatient = async(req, res) => {
     }
 };
 
+const getPatientsByFilter = async(request, response) => {
+    try {
+        let { searchFilter } = request.body;
+
+        let patientViewModel = [];
+
+        if(searchFilter) {
+            patientViewModel = await patient.find({
+                nic: { $regex: searchFilter, $options: "i" },
+            });
+        } else {
+            patientViewModel = await patient.find();
+        }
+
+        response.json(patientViewModel);
+    } catch(error) {}
+};
+
 module.exports = {
     registerPatient,
     getPatients,
     getOnePatient,
     deletePatient,
     updatePatient,
+    getPatientsByFilter,
 };
